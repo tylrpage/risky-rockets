@@ -7,39 +7,51 @@ public class TrashDragging : MonoBehaviour
     [SerializeField] private float MovedTrashTransparency;
     [SerializeField] private BoxCollider2D DropArea;
     
+    public bool IsHoveringDraggableTrash { get; private set; }
     private Trash _grabbedTrash;
     private Trash _grabbedTrashCopy;
+    private bool _isOverDropArea;
+
+    private Trash GetHoveredTrash()
+    {
+        // Try grab trash
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 mousePos2D = new Vector2(mouseWorldPos.x, mouseWorldPos.y);
+            
+        RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+
+        if (hit.collider != null && hit.collider.TryGetComponent(out Trash trash))
+        {
+            return trash;
+        }
+
+        return null;
+    }
     
     private void Update()
     {
+        Trash hoveredTrash = GetHoveredTrash();
+        IsHoveringDraggableTrash = hoveredTrash != null && !hoveredTrash.Dropped;
+
         if (Input.GetMouseButtonDown(0))
         {
-            if (_grabbedTrash == null)
+            if (_grabbedTrash == null && hoveredTrash != null)
             {
-                // Try grab trash
-                Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Vector2 mousePos2D = new Vector2(mouseWorldPos.x, mouseWorldPos.y);
-            
-                RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
-
-                if (hit.collider != null && hit.collider.TryGetComponent(out Trash trash))
+                if (hoveredTrash.Dropped)
                 {
-                    if (trash.Dropped)
-                    {
-                        Debug.LogError($"Can't pickup trash that's already dropped");
-                    }
-                    else
-                    {
-                        // Make copy of trash
-                        _grabbedTrash = trash;
-                        _grabbedTrashCopy = Instantiate(trash.gameObject).GetComponent<Trash>();
-                        _grabbedTrashCopy.GetComponent<Rigidbody2D>().simulated = false;
+                    Debug.LogError($"Can't pickup trash that's already dropped");
+                }
+                else
+                {
+                    // Make copy of trash
+                    _grabbedTrash = hoveredTrash;
+                    _grabbedTrashCopy = Instantiate(hoveredTrash.gameObject).GetComponent<Trash>();
+                    _grabbedTrashCopy.GetComponent<Rigidbody2D>().simulated = false;
                         
-                        // Color the trash we are moving
-                        SpriteRenderer trashSr = _grabbedTrashCopy.GetComponent<SpriteRenderer>();
-                        Color trashColor = new Color(trashSr.color.r, trashSr.color.g, trashSr.color.b, MovedTrashTransparency);
-                        _grabbedTrash.GetComponent<SpriteRenderer>().color = trashColor;
-                    }
+                    // Color the trash we are moving
+                    SpriteRenderer trashSr = _grabbedTrashCopy.GetComponent<SpriteRenderer>();
+                    Color trashColor = new Color(trashSr.color.r, trashSr.color.g, trashSr.color.b, MovedTrashTransparency);
+                    _grabbedTrash.GetComponent<SpriteRenderer>().color = trashColor;
                 }   
             }
             else
@@ -75,12 +87,24 @@ public class TrashDragging : MonoBehaviour
 
     private void LateUpdate()
     {
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        _isOverDropArea = DropArea.OverlapPoint(mouseWorldPos);
+
         if (_grabbedTrashCopy != null)
         {
             // Move around our trash copy
-            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             float originalZ = _grabbedTrash.transform.position.z;
             _grabbedTrashCopy.transform.position = new Vector3(mouseWorldPos.x, mouseWorldPos.y, originalZ);
         }
+    }
+
+    public bool IsDraggingTrash()
+    {
+        return _grabbedTrash != null;
+    }
+
+    public bool IsOverDropArea()
+    {
+        return _isOverDropArea;
     }
 }
