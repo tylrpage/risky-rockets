@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4923053182145593744}
   - component: {fileID: 5135448212052577634}
   - component: {fileID: 8997812622790951266}
-  - component: {fileID: 5295272825909964488}
+  - component: {fileID: 8588144414043451872}
   - component: {fileID: 3500032077645145685}
   m_Layer: 0
   m_Name: Doll
@@ -89,7 +89,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 3, y: 3}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -121,7 +121,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!60 &5295272825909964488
+--- !u!60 &8588144414043451872
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -159,34 +159,26 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 3, y: 3}
+    newSize: {x: 3, y: 3}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.5, y: -0.875}
-      - {x: 0.5, y: -0.5}
-      - {x: 0.875, y: -0.5}
-      - {x: 1, y: -0.375}
-      - {x: 1, y: 0.4375}
-      - {x: 0.9375, y: 0.5}
+    - - {x: 0.5, y: -0.5}
+      - {x: 1.5, y: -0.5}
+      - {x: 1.5, y: 0.5}
       - {x: 0.5, y: 0.5}
-      - {x: 0.51466, y: 0.83827186}
-      - {x: 0.3125, y: 1}
-      - {x: -0.25, y: 1}
-      - {x: -0.5, y: 0.75}
+      - {x: 0.5, y: 1.5}
+      - {x: -0.5, y: 1.5}
       - {x: -0.5, y: 0.5}
-      - {x: -0.9375, y: 0.5}
-      - {x: -1, y: 0.4375}
-      - {x: -1, y: -0.375}
-      - {x: -0.9375, y: -0.5}
+      - {x: -1.5, y: 0.5}
+      - {x: -1.5, y: -0.5}
       - {x: -0.5, y: -0.5}
-      - {x: -0.5, y: -0.875}
-      - {x: -0.375, y: -1}
-      - {x: 0.375, y: -1}
+      - {x: -0.5, y: -1.5}
+      - {x: 0.5, y: -1.5}
   m_UseDelaunayMesh: 1
 --- !u!114 &3500032077645145685
 MonoBehaviour:

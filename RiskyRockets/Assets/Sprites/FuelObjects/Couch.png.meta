@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3d89c6d13244e5145815e1825439ae85
+guid: a51462a0f5235ac4ba33daca5d44b900
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5934426167403820858
-    second: jar_0
+      213: -7706002169006976291
+    second: Couch_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,17 +46,17 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
-  spriteTessellationDetail: -1
+  spriteTessellationDetail: 1
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
@@ -100,33 +100,50 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: jar_0
+      name: Couch_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 352
-        height: 352
+        width: 32
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a3733e548215b5250800000000000000
-      internalID: 5934426167403820858
+      spriteID: dd213fdfad7ce0590800000000000000
+      internalID: -7706002169006976291
       vertices: []
       indices: 
       edges: []
       weights: []
     outline: []
     customData: 
-    physicsShape: []
+    physicsShape:
+    - - {x: 7, y: -14}
+      - {x: 13, y: -14}
+      - {x: 16, y: -12}
+      - {x: 16, y: 12}
+      - {x: 15, y: 13}
+      - {x: 13, y: 14}
+      - {x: 8, y: 14}
+      - {x: 5, y: 16}
+      - {x: -15, y: 16}
+      - {x: -16, y: 15}
+      - {x: -16, y: 6}
+      - {x: -13, y: 6}
+      - {x: -13, y: -6}
+      - {x: -16, y: -6}
+      - {x: -16, y: -15}
+      - {x: -15, y: -16}
+      - {x: 5, y: -16}
     bones: []
-    spriteID: 
-    internalID: 0
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
@@ -134,8 +151,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      jar_0: 5934426167403820858
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

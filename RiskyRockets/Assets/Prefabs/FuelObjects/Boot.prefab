@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6513568480439386948}
   - component: {fileID: 1061834598596690646}
   - component: {fileID: 8595989952934094239}
-  - component: {fileID: 8647122583672895496}
+  - component: {fileID: 6102029519744422443}
   - component: {fileID: 4126351987169517997}
   m_Layer: 0
   m_Name: Boot
@@ -121,7 +121,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!60 &8647122583672895496
+--- !u!60 &6102029519744422443
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -172,9 +172,15 @@ PolygonCollider2D:
       - {x: 0.8125, y: -0.125}
       - {x: 0.6875, y: -0.0625}
       - {x: 0.0625, y: 0}
+      - {x: -0.0625, y: 0.125}
+      - {x: 0, y: 0.3125}
       - {x: 0, y: 1}
       - {x: -0.875, y: 1}
-      - {x: -1, y: 0.9375}
+      - {x: -1, y: 0.875}
+      - {x: -1, y: 0.125}
+      - {x: -0.9375, y: 0.0625}
+      - {x: -0.9375, y: -0.0625}
+      - {x: -1, y: -0.125}
       - {x: -1, y: -0.9375}
       - {x: -0.9375, y: -1}
       - {x: 0.8125, y: -1}
