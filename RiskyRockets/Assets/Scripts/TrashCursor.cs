@@ -60,7 +60,6 @@ public class TrashCursor : MonoBehaviour
         if (_trashDragging.IsDraggingTrash())
         {
             SetCursor(_trashDragging.IsOverDropArea() ? CursorType.GrabberGood : CursorType.GrabberBad);
-            Debug.Log("DRAGGING");
         }
         else if (_trashDragging.IsHoveringDraggableTrash)
         {

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -11,7 +13,19 @@ public class TrashDragging : MonoBehaviour
     public bool IsHoveringDraggableTrash { get; private set; }
     private Trash _grabbedTrash;
     private Trash _grabbedTrashCopy;
+    private Transform _grabbedTrashHitGhost;
     private bool _isOverDropArea;
+    private List<RaycastHit2D> _rigidbodyCastHitsBuffer = new();
+    private ContactFilter2D _ghostContactFilter;
+
+    private void Start()
+    {
+        _ghostContactFilter = new ContactFilter2D()
+        {
+            layerMask = LayerMask.GetMask("Default"),
+            useLayerMask = true,
+        };
+    }
 
     private Trash GetHoveredTrash()
     {
@@ -38,9 +52,13 @@ public class TrashDragging : MonoBehaviour
         
         // Delete the copy
         Destroy(_grabbedTrashCopy.gameObject);
+        _grabbedTrashCopy = null;
+        
+        // Delete drop ghost
+        Destroy(_grabbedTrashHitGhost.gameObject);
+        _grabbedTrashHitGhost = null;
         
         _grabbedTrash = null;
-        _grabbedTrashCopy = null;
     }
     
     private void Update()
@@ -76,6 +94,13 @@ public class TrashDragging : MonoBehaviour
                         SpriteRenderer trashSr = _grabbedTrashCopy.GetComponent<SpriteRenderer>();
                         Color trashColor = new Color(trashSr.color.r, trashSr.color.g, trashSr.color.b, MovedTrashTransparency);
                         _grabbedTrash.GetComponent<SpriteRenderer>().color = trashColor;
+                        
+                        // Create ghost
+                        _grabbedTrashHitGhost = Instantiate(hoveredTrash.gameObject).transform;
+                        Color trashGhostColor = new Color(trashSr.color.r, trashSr.color.g, trashSr.color.b, MovedTrashTransparency);
+                        _grabbedTrash.GetComponent<SpriteRenderer>().color = trashColor;
+                        _grabbedTrashHitGhost.GetComponent<SpriteRenderer>().color = trashGhostColor;
+                        _grabbedTrashHitGhost.GetComponent<Rigidbody2D>().simulated = false;
                     }    
                 }
             }
@@ -97,6 +122,11 @@ public class TrashDragging : MonoBehaviour
                 
                     // Delete the copy
                     Destroy(_grabbedTrashCopy.gameObject);
+                    _grabbedTrashCopy = null;
+        
+                    // Delete drop ghost
+                    Destroy(_grabbedTrashHitGhost.gameObject);
+                    _grabbedTrashHitGhost = null;
                 
                     _grabbedTrash.Dropped = true;
                     _grabbedTrash = null;
@@ -120,6 +150,26 @@ public class TrashDragging : MonoBehaviour
             // Move around our trash copy
             float originalZ = _grabbedTrash.transform.position.z;
             _grabbedTrashCopy.transform.position = new Vector3(mouseWorldPos.x, mouseWorldPos.y, originalZ);
+
+            bool shouldGhostBeEnabled = false;
+            if (_isOverDropArea)
+            {
+                Transform ghostTransform = _grabbedTrashCopy.transform;
+                int hits = _grabbedTrashCopy.GetComponent<Rigidbody2D>().Cast(_grabbedTrashCopy.transform.position, ghostTransform.eulerAngles.z, Vector2.down, _ghostContactFilter, _rigidbodyCastHitsBuffer);
+                if (hits > 0)
+                {
+                    shouldGhostBeEnabled = true;
+                    _grabbedTrashHitGhost.position = _grabbedTrashCopy.transform.position +
+                                                     Vector3.down * _rigidbodyCastHitsBuffer[0].distance;
+                    // Debug.Log($"ghost drop distance {_rigidbodyCastHitsBuffer[0].distance}, name: {_rigidbodyCastHitsBuffer[0].collider.name}");
+                    _grabbedTrashHitGhost.rotation = _grabbedTrashCopy.transform.rotation;
+                }
+            }
+
+            if (shouldGhostBeEnabled != _grabbedTrashHitGhost.gameObject.activeSelf)
+            {
+                _grabbedTrashHitGhost.gameObject.SetActive(shouldGhostBeEnabled);
+            }
         }
     }
 
