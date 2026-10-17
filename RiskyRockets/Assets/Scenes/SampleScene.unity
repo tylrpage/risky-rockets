@@ -1700,6 +1700,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrashDragging
   MovedTrashTransparency: 0.6
   DropArea: {fileID: 1868680934}
+  RotationSpeed: 75
 --- !u!1 &1854122579
 GameObject:
   m_ObjectHideFlags: 0
