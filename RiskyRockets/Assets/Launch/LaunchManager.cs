@@ -7,6 +7,7 @@ public class LaunchManager : MonoBehaviour
 {
     public static LaunchManager Instance;
     public event Action LaunchStarted;
+    public event Action LaunchEnded;
 
     private void Awake()
     {
@@ -20,5 +21,10 @@ public class LaunchManager : MonoBehaviour
     public void StartLaunch()
     {
         LaunchStarted?.Invoke();
+    }
+
+    public void EndLaunch()
+    {
+        LaunchEnded?.Invoke();
     }
 }

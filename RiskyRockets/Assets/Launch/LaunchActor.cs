@@ -7,17 +7,25 @@ using UnityEngine.Splines;
 // Attach to a GameObject to have it move along a spline and control its timing, for the launch scene.
 public class LaunchActor : MonoBehaviour
 {
-    private SplineContainer _splineContainer;
-    [SerializeField] private float _startTime;
-    [SerializeField] private float _duration;
     private LaunchManager _launchManager;
+    [SerializeField] private SplineContainer _splineContainer;
+    // Seconds after LaunchStart this actor begins acting
+    [SerializeField] private float _startTime;
+    // Seconds it taket this actor to reach CompletionPercentage progress along spline
+    [SerializeField] private float _duration;
+    // Percentage of the way through the spline this actor reaches (0.0f < p <= 1.0f)
+    public float CompletionPercentage;
     private bool _isActing;
     private float _timeSinceActingStart;
     private Spline _spline;
+    private Vector3 _initialPosition;
 
     private void Start()
     {
-        _splineContainer = gameObject.GetComponent<SplineContainer>();
+        if (_splineContainer is null)
+        {
+            _splineContainer = gameObject.GetComponent<SplineContainer>();
+        }
         _spline = _splineContainer.Spline;
         _launchManager = LaunchManager.Instance;
         _launchManager.LaunchStarted += BeginActing;
@@ -32,17 +40,26 @@ public class LaunchActor : MonoBehaviour
     void Update()
     {
         if (!_isActing) return;
-
-        Act();
+        
+        // If unset in the inspector, actor is assumed to be intended to go the full length of the spline.
+        if (CompletionPercentage == 0.0f)
+        {
+            Act(1.0f);
+        }
+        else
+        {
+            Act(CompletionPercentage);
+        }
     }
 
     private void BeginActing()
     {
         Debug.Log("Launch started!");
         _isActing = true;
+        _initialPosition = transform.position;
     }
     
-    private void Act()
+    private void Act(float completionPercentage)
     {
         _timeSinceActingStart += Time.deltaTime;
 
@@ -50,12 +67,13 @@ public class LaunchActor : MonoBehaviour
 
         float t = _timeSinceActingStart - _startTime;
         float p = t / _duration;
+        p = AnimationCurves.CalculateParametric(p) * completionPercentage;
         
         Vector3 splinePosition = _spline.EvaluatePosition(p);
-        Vector3 newPosition = new Vector3(splinePosition.x, splinePosition.y, transform.position.z);
+        Vector3 newPosition = _initialPosition + new Vector3(splinePosition.x, splinePosition.y, 0);
         transform.position = newPosition;
 
-        if (p >= 1)
+        if (p >= completionPercentage)
         {
             _isActing = false;
         }
