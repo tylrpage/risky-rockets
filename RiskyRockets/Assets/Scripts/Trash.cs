@@ -10,6 +10,12 @@ public class Trash : MonoBehaviour
     private Rigidbody2D _body;
     public Rigidbody2D Body => _body != null ? _body : (_body = GetComponent<Rigidbody2D>());
 
+    // private void OnCollisionEnter2D(Collision2D collision)
+    // {
+    //     float speed = collision.relativeVelocity.magnitude;
+    //     SoundEffectManager.Instance.PlayCollisionSFX(speed);
+    // }
+
     public void PrepareForLaunch(float gravityScale)
     {
         if (Body == null) return;

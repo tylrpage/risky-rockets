@@ -90,6 +90,8 @@ public class TrashDragging : MonoBehaviour
                     }
                     else
                     {
+                        SoundEffectManager.Instance.PlayCollisionSFX(5f);
+                        
                         // Make copy of trash
                         _grabbedTrash = hoveredTrash;
                         _grabbedTrashCopy = Instantiate(hoveredTrash.gameObject).GetComponent<Trash>();
@@ -115,6 +117,8 @@ public class TrashDragging : MonoBehaviour
                 // Check if we are in drop area
                 if (DropArea.OverlapPoint(mouseWorldPos))
                 {
+                    SoundEffectManager.Instance.PlayCollisionSFX(5f);
+                    
                     // Drop trash
                     // Move trash original
                     _grabbedTrash.transform.position = _grabbedTrashCopy.transform.position;
