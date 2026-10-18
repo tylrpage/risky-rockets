@@ -31,7 +31,6 @@ public class TrashManager : MonoBehaviour
 
     public void AddTrashToShip(Trash trash)
     {
-        Debug.Log("AddTrashtoShip!");
         TrashInShip.Add(trash);
     }
 

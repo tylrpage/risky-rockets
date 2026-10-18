@@ -57,7 +57,6 @@ public class Rocket : MonoBehaviour
 
     private IEnumerator Shake()
     {
-        yield return new WaitForSeconds(5f);
         _rocketPosition = transform.position;
         while (true)
         {
