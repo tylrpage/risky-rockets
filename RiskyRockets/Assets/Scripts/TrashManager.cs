@@ -8,7 +8,9 @@ public class TrashManager : MonoBehaviour
     public static TrashManager Instance;
     public List<Trash> AllTrash;
     public List<Trash> TrashInShip;
-    private const float TRASH_BURN_INTERVAL = 2.0f;
+    private const float TRASH_BURN_INTERVAL = 3.0f;
+    private const int SPECIAL_TRASH_THRESHHOLD = 4;
+    [SerializeField] private Rocket _rocket;
     
     private void Start()
     {
@@ -33,6 +35,10 @@ public class TrashManager : MonoBehaviour
             Trash trash = TrashInShip[0];
             trash.Eject();
             TrashInShip.RemoveAt(0);
+            if (trash.FuelValue >= SPECIAL_TRASH_THRESHHOLD)
+            {
+                StartCoroutine(_rocket.Boost());
+            }
         }
     }
 }
