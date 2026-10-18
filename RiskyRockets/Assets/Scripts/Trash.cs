@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Trash : MonoBehaviour
 {
-    [SerializeField] public int FuelValue;
+    [field: SerializeField] public int FuelValue { get; private set; }
 
     public bool Dropped;
     public void Eject()
