@@ -117,6 +117,9 @@ public class TrashDragging : MonoBehaviour
                     SpriteRenderer trashSr = _grabbedTrashCopy.GetComponent<SpriteRenderer>();
                     Color trashColor = new Color(trashSr.color.r, trashSr.color.g, trashSr.color.b, 1);
                     _grabbedTrash.GetComponent<SpriteRenderer>().color = trashColor;
+                    
+                    // Register Trash to TrashManager
+                    TrashManager.Instance.AddTrashToShip(_grabbedTrash);
                 
                     // Delete the copy
                     Destroy(_grabbedTrashCopy.gameObject);
@@ -129,6 +132,7 @@ public class TrashDragging : MonoBehaviour
                     _grabbedTrash.Dropped = true;
                     _grabbedTrash = null;
                     _grabbedTrashCopy = null;
+                    
                 }
                 else
                 {
