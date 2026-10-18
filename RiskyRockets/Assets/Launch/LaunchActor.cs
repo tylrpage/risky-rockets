@@ -7,15 +7,18 @@ using UnityEngine.Splines;
 // Attach to a GameObject to have it move along a spline and control its timing, for the launch scene.
 public class LaunchActor : MonoBehaviour
 {
-    [SerializeField] private SplineContainer _splineContainer;
-    [SerializeField] private float _startTime;
-    [SerializeField] private float _duration;
     private LaunchManager _launchManager;
+    [SerializeField] private SplineContainer _splineContainer;
+    // Seconds after LaunchStart this actor begins acting
+    [SerializeField] private float _startTime;
+    // Seconds it taket this actor to reach CompletionPercentage progress along spline
+    [SerializeField] private float _duration;
+    // Percentage of the way through the spline this actor reaches (0.0f < p <= 1.0f)
+    public float CompletionPercentage;
     private bool _isActing;
     private float _timeSinceActingStart;
     private Spline _spline;
     private Vector3 _initialPosition;
-    public float CompletionPercentage;
 
     private void Start()
     {
@@ -38,6 +41,7 @@ public class LaunchActor : MonoBehaviour
     {
         if (!_isActing) return;
         
+        // If unset in the inspector, actor is assumed to be intended to go the full length of the spline.
         if (CompletionPercentage == 0.0f)
         {
             Act(1.0f);

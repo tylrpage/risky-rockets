@@ -3075,7 +3075,7 @@ MonoBehaviour:
   _splineContainer: {fileID: 0}
   _startTime: 0
   _duration: 20
-  CompletionPercentage: 0.5
+  CompletionPercentage: 1
 --- !u!114 &1813014226
 MonoBehaviour:
   m_ObjectHideFlags: 0
