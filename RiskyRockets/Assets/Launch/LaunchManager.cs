@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class LaunchManager : MonoBehaviour
@@ -15,6 +16,12 @@ public class LaunchManager : MonoBehaviour
     [SerializeField] private float _ignitionDelay = 1.5f;
     [SerializeField] private float _driftTime = 2f;
     [SerializeField] private float _worldUnitsPerMile = 10f;
+    [SerializeField] private GameObject _dropArea;
+    [SerializeField] private Transform _noseCone;
+    [SerializeField] private float _noseCloseDuration;
+    [SerializeField] private float _roskyOriginalOffset;
+    [SerializeField] private Transform _rosky;
+    [SerializeField] private float _roskyMoveDuration;
 
     public float TargetFuel => _targetFuel;
     public float OrbitHeightMiles => _orbitHeightMiles;
@@ -41,15 +48,42 @@ public class LaunchManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        _rosky.localPosition += Vector3.up * _roskyOriginalOffset;
+    }
+
     public void StartLaunch()
     {
         if (HasLaunched) return;
         HasLaunched = true;
         LaunchStarted?.Invoke();
+        
+        _dropArea.gameObject.SetActive(false);
+        StartCoroutine(CloseNoseCoroutine());
     }
 
     public void EndLaunch(float bestHeightMiles)
     {
         LaunchEnded?.Invoke(bestHeightMiles);
+    }
+
+    private IEnumerator CloseNoseCoroutine()
+    {
+        float t = 0;
+        while (t < _noseCloseDuration)
+        {
+            _noseCone.Rotate(0, 0, (180 / _noseCloseDuration) * Time.deltaTime);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        t = 0;
+        while (t < _roskyMoveDuration)
+        {
+            _rosky.localPosition -= Vector3.up * (_roskyOriginalOffset * Time.deltaTime);
+            t += Time.deltaTime;
+            yield return null;
+        }
     }
 }
