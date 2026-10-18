@@ -28,18 +28,18 @@ public class LaunchActor : MonoBehaviour
         }
         _spline = _splineContainer.Spline;
         _launchManager = LaunchManager.Instance;
-        _launchManager.LaunchStarted += BeginActing;
+        _launchManager.LaunchStarted += BeginTimer;
     }
 
     private void OnDestroy()
     {
-        _launchManager.LaunchStarted -= BeginActing;
+        _launchManager.LaunchStarted -= BeginTimer;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!_isActing) return;
+        if (!_isActing || _spline is null) return;
         
         // If unset in the inspector, actor is assumed to be intended to go the full length of the spline.
         if (CompletionPercentage == 0.0f)
@@ -52,9 +52,8 @@ public class LaunchActor : MonoBehaviour
         }
     }
 
-    private void BeginActing()
+    private void BeginTimer()
     {
-        Debug.Log("Launch started!");
         _isActing = true;
         _initialPosition = transform.position;
     }
