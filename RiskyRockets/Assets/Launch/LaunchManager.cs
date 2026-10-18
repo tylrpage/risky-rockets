@@ -13,6 +13,8 @@ public class LaunchManager : MonoBehaviour
     [SerializeField] private float _targetFuel = 150f;
     [SerializeField] private float _orbitHeightMiles = 100f;
     [SerializeField] private float _burnTimePerItem = 0.35f;
+    // Pause after one piece finishes burning before the next one starts.
+    [SerializeField] private float _delayBetweenBurns = 0.2f;
     // The camera centers on the rocket during this delay.
     [SerializeField] private float _ignitionDelay = 1.5f;
     [SerializeField] private float _driftTime = 2f;
@@ -31,6 +33,7 @@ public class LaunchManager : MonoBehaviour
     public float TargetFuel => _targetFuel;
     public float OrbitHeightMiles => _orbitHeightMiles;
     public float BurnTimePerItem => _burnTimePerItem;
+    public float DelayBetweenBurns => _delayBetweenBurns;
     public float IgnitionDelay => _ignitionDelay;
     public float WorldUnitsPerMile => _worldUnitsPerMile;
 

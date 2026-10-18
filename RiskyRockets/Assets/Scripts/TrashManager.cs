@@ -109,7 +109,15 @@ public class TrashManager : MonoBehaviour
         {
             _rocket.AddBurn(trash.FuelValue * launch.DeltaVPerFuel, burnTime);
             trash.Burn(burnTime);
+            _rocket.FlashFire(trash.FuelValue, burnTime);
             yield return new WaitForSeconds(burnTime);
+
+            // Pause between pieces, but not after the last one.
+            TrashInShip.RemoveAll(t => t == null);
+            if (TrashInShip.Count > 0 && launch.DelayBetweenBurns > 0f)
+            {
+                yield return new WaitForSeconds(launch.DelayBetweenBurns);
+            }
         }
         _rocket.StopShake();
         ShipEmptied?.Invoke();

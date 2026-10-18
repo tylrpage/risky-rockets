@@ -21,6 +21,10 @@ public class Rocket : MonoBehaviour
     [SerializeField] private float _shakeDistance = 0.1f;
     [SerializeField] private float _cargoGravityScale = 3f;
     [SerializeField] private Transform[] _scrollingWorld;
+    [SerializeField] private SpriteRenderer _smallFire;
+    [SerializeField] private SpriteRenderer _bigFire;
+    // Trash worth more fuel than this flashes the big fire.
+    [SerializeField] private int _bigFireFuelThreshold = 10;
 
     public float AltitudeMiles { get; private set; }
     public float VelocityMilesPerSecond { get; private set; }
@@ -45,9 +49,14 @@ public class Rocket : MonoBehaviour
     private float _timeSinceLaunch;
     private bool _isFlying;
     private bool _fuelSpent;
+    private Coroutine _smallFireFade;
+    private Coroutine _bigFireFade;
 
     private void Start()
     {
+        SetAlpha(_smallFire, 0f);
+        SetAlpha(_bigFire, 0f);
+
         _launchManager = LaunchManager.Instance;
         _launchManager.LaunchStarted += OnLaunchStarted;
         TrashManager.Instance.ShipEmptied += OnShipEmptied;
@@ -246,6 +255,39 @@ public class Rocket : MonoBehaviour
             yield return new WaitForSeconds(SHAKE_INTERVAL);
         }
         _shakeOffset = Vector2.zero;
+    }
+
+    public void FlashFire(int fuel, float duration)
+    {
+        if (fuel > _bigFireFuelThreshold) FlashFire(_bigFire, ref _bigFireFade, duration);
+        else FlashFire(_smallFire, ref _smallFireFade, duration);
+    }
+
+    private void FlashFire(SpriteRenderer fire, ref Coroutine fade, float duration)
+    {
+        if (fire == null) return;
+        if (fade != null) StopCoroutine(fade);
+        fade = StartCoroutine(FadeFire(fire, duration));
+    }
+
+    private static IEnumerator FadeFire(SpriteRenderer fire, float duration)
+    {
+        float t = 0f;
+        while (t < duration)
+        {
+            SetAlpha(fire, 1f - t / duration);
+            t += Time.deltaTime;
+            yield return null;
+        }
+        SetAlpha(fire, 0f);
+    }
+
+    private static void SetAlpha(SpriteRenderer sr, float alpha)
+    {
+        if (sr == null) return;
+        Color c = sr.color;
+        c.a = alpha;
+        sr.color = c;
     }
 
     public void StopShake()
