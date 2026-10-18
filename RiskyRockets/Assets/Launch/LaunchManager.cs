@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LaunchManager : MonoBehaviour
@@ -19,9 +20,13 @@ public class LaunchManager : MonoBehaviour
     [SerializeField] private GameObject _dropArea;
     [SerializeField] private Transform _noseCone;
     [SerializeField] private float _noseCloseDuration;
+    // Trigger collider on the nose; trash it touches while closing is destroyed.
+    [SerializeField] private Collider2D _noseCollider;
     [SerializeField] private float _roskyOriginalOffset;
     [SerializeField] private Transform _rosky;
     [SerializeField] private float _roskyMoveDuration;
+
+    private readonly List<Collider2D> _noseHits = new();
 
     public float TargetFuel => _targetFuel;
     public float OrbitHeightMiles => _orbitHeightMiles;
@@ -74,9 +79,11 @@ public class LaunchManager : MonoBehaviour
         while (t < _noseCloseDuration)
         {
             _noseCone.Rotate(0, 0, (180 / _noseCloseDuration) * Time.deltaTime);
+            DestroyTrashTouchingNose();
             t += Time.deltaTime;
             yield return null;
         }
+        DestroyTrashTouchingNose();
 
         t = 0;
         while (t < _roskyMoveDuration)
@@ -84,6 +91,24 @@ public class LaunchManager : MonoBehaviour
             _rosky.localPosition -= Vector3.up * (_roskyOriginalOffset * Time.deltaTime);
             t += Time.deltaTime;
             yield return null;
+        }
+    }
+
+    private void DestroyTrashTouchingNose()
+    {
+        if (_noseCollider == null)
+        {
+            return;
+        }
+
+        Physics2D.SyncTransforms();
+        int count = _noseCollider.Overlap(new ContactFilter2D().NoFilter(), _noseHits);
+        for (int i = 0; i < count; i++)
+        {
+            if (_noseHits[i] != null && _noseHits[i].TryGetComponent(out Trash trash))
+            {
+                TrashManager.Instance.DestroyTrash(trash);
+            }
         }
     }
 }

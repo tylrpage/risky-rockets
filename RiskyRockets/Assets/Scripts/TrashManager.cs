@@ -40,13 +40,16 @@ public class TrashManager : MonoBehaviour
     {
         TrashInShip.RemoveAll(trash => trash == null);
 
-        int totalFuel = 0;
         foreach (Trash trash in TrashInShip)
         {
-            totalFuel += trash.FuelValue;
             trash.PrepareForLaunch(gravityScale);
         }
-        Debug.Log($"Launching with {totalFuel} fuel (target {LaunchManager.Instance.TargetFuel})");
+    }
+
+    public void DestroyTrash(Trash trash)
+    {
+        TrashInShip.Remove(trash);
+        Destroy(trash.gameObject);
     }
 
     public List<Transform> FreezeWorldTrash()
@@ -92,6 +95,12 @@ public class TrashManager : MonoBehaviour
     {
         LaunchManager launch = LaunchManager.Instance;
         yield return new WaitForSeconds(launch.IgnitionDelay);
+
+        // Logged at ignition so it reflects any trash the nose cone destroyed.
+        TrashInShip.RemoveAll(t => t == null);
+        int totalFuel = 0;
+        foreach (Trash t in TrashInShip) totalFuel += t.FuelValue;
+        Debug.Log($"Launching with {totalFuel} fuel (target {launch.TargetFuel})");
 
         float burnTime = launch.BurnTimePerItem;
         // Pick the lowest piece each time, since the stack shifts as it settles.
