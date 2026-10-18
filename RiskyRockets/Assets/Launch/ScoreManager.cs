@@ -44,8 +44,7 @@ public class ScoreManager : MonoBehaviour
     private void ShowFinal(float bestMiles)
     {
         BestHeightMiles = bestMiles;
-        // Small tolerance so hitting the target exactly still counts as orbit.
-        bool reachedOrbit = bestMiles >= LaunchManager.Instance.OrbitHeightMiles - 0.05f;
+        bool reachedOrbit = LaunchManager.Instance.ReachedOrbit(bestMiles);
         _scoreText.text = reachedOrbit ? $"{bestMiles:0.0} mi\nROSKY HAS REACHED ORBIT!!!" : $"{bestMiles:0.0} mi\nRIP ROSKY";
     }
 }

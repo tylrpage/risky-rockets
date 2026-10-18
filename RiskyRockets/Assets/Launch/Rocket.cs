@@ -11,6 +11,13 @@ public class Rocket : MonoBehaviour
 
     [SerializeField] private Camera _camera;
     [SerializeField] private Vector2 _cameraOffset = new Vector2(1f, 0f);
+    // After the flight ends, how long the camera takes to stop following the rocket.
+    [SerializeField] private float _cameraReleaseDuration = 0.75f;
+    [SerializeField] private float _fallDelay = 0.3f;
+    [SerializeField] private float _fallStartSpeed = 1f;
+    [SerializeField] private float _fallAcceleration = 3f;
+    [SerializeField] private float _fallTiltDegrees = 20f;
+    [SerializeField] private float _fallTiltDuration = 1.5f;
     [SerializeField] private float _shakeDistance = 0.1f;
     [SerializeField] private float _cargoGravityScale = 3f;
     [SerializeField] private Transform[] _scrollingWorld;
@@ -29,6 +36,10 @@ public class Rocket : MonoBehaviour
     private readonly List<(Transform transform, Vector3 start)> _scrolling = new();
     private LaunchManager _launchManager;
     private Vector3 _cameraStartPosition;
+    private Vector3 _followTarget;
+    private Vector3 _lastRocketTarget;
+    private bool _cameraReleased;
+    private float _timeSinceRelease;
     private Vector2 _shakeOffset;
     private float _currentShake;
     private float _timeSinceLaunch;
@@ -53,6 +64,7 @@ public class Rocket : MonoBehaviour
         _cameraStartPosition = _camera.transform.position;
         _timeSinceLaunch = 0f;
         _isFlying = true;
+        _cameraReleased = false;
 
         TrashManager.Instance.PrepareCargo(_cargoGravityScale);
 
@@ -134,8 +146,50 @@ public class Rocket : MonoBehaviour
         if (finished)
         {
             _isFlying = false;
+            _cameraReleased = true;
+            _timeSinceRelease = 0f;
             _launchManager.EndLaunch(BestAltitudeMiles);
+            if (!_launchManager.ReachedOrbit(BestAltitudeMiles)) StartCoroutine(Fall());
         }
+    }
+
+    private IEnumerator Fall()
+    {
+        yield return new WaitForSeconds(_fallDelay);
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        Quaternion startRotation = transform.rotation;
+        float speed = _fallStartSpeed;
+        float t = 0f;
+
+        while (true)
+        {
+            float dt = Time.deltaTime;
+            t += dt;
+            speed += _fallAcceleration * dt;
+            transform.position += Vector3.down * (speed * dt);
+
+            float tilt = _fallTiltDuration > 0f ? Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / _fallTiltDuration)) : 1f;
+            transform.rotation = startRotation * Quaternion.Euler(0f, 0f, -_fallTiltDegrees * tilt);
+
+            float viewBottom = _camera.transform.position.y - _camera.orthographicSize;
+            if (TopOf(renderers) < viewBottom)
+            {
+                gameObject.SetActive(false);
+                yield break;
+            }
+            yield return null;
+        }
+    }
+
+    private static float TopOf(Renderer[] renderers)
+    {
+        float top = float.MinValue;
+        foreach (Renderer r in renderers)
+        {
+            if (r != null && r.enabled && r.gameObject.activeInHierarchy) top = Mathf.Max(top, r.bounds.max.y);
+        }
+        return top;
     }
 
     // Exact solution of dv/dt = a - k*v over dt, so results don't depend on frame rate.
@@ -161,13 +215,27 @@ public class Rocket : MonoBehaviour
     {
         if (_launchManager == null || !_launchManager.HasLaunched) return;
 
-        Vector3 target = transform.position + (Vector3)_cameraOffset;
-        target.z = _cameraStartPosition.z;
+        Vector3 rocketTarget = transform.position + (Vector3)_cameraOffset;
+        rocketTarget.z = _cameraStartPosition.z;
+
+        if (!_cameraReleased)
+        {
+            _followTarget = rocketTarget;
+        }
+        else
+        {
+            // Follow the rocket's movement less and less until the camera stops.
+            _timeSinceRelease += Time.deltaTime;
+            float released = _cameraReleaseDuration > 0f ? Mathf.Clamp01(_timeSinceRelease / _cameraReleaseDuration) : 1f;
+            float weight = 1f - Mathf.SmoothStep(0f, 1f, released);
+            _followTarget += (rocketTarget - _lastRocketTarget) * weight;
+        }
+        _lastRocketTarget = rocketTarget;
 
         float centerDuration = _launchManager.IgnitionDelay;
         float p = centerDuration > 0f ? Mathf.Clamp01(_timeSinceLaunch / centerDuration) : 1f;
         p = AnimationCurves.CalculateParametric(p);
-        _camera.transform.position = Vector3.Lerp(_cameraStartPosition, target, p) + (Vector3)_shakeOffset;
+        _camera.transform.position = Vector3.Lerp(_cameraStartPosition, _followTarget, p) + (Vector3)_shakeOffset;
     }
 
     private IEnumerator Shake()

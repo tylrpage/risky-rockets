@@ -1344,7 +1344,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 28.9, y: -21.3}
+  m_AnchoredPosition: {x: 28.899994, y: -21.300003}
   m_SizeDelta: {x: 323.2, y: 70}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &437284030
@@ -4765,6 +4765,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Rocket
   _camera: {fileID: 330585545}
   _cameraOffset: {x: 1, y: 0}
+  _cameraReleaseDuration: 0.75
+  _fallDelay: 0
+  _fallStartSpeed: 1
+  _fallAcceleration: 10
+  _fallTiltDegrees: 20
+  _fallTiltDuration: 3
   _shakeDistance: 0.1
   _cargoGravityScale: 3
   _scrollingWorld:
@@ -6352,7 +6358,7 @@ MonoBehaviour:
   _orbitHeightMiles: 100
   _burnTimePerItem: 0.5
   _ignitionDelay: 2.5
-  _driftTime: 1
+  _driftTime: 0.8
   _worldUnitsPerMile: 2
   _dropArea: {fileID: 1868680931}
   _noseCone: {fileID: 2109887147}

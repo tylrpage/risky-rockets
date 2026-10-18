@@ -43,6 +43,9 @@ public class LaunchManager : MonoBehaviour
 
     public bool HasLaunched { get; private set; }
 
+    // Small tolerance so hitting the target exactly still counts as orbit.
+    public bool ReachedOrbit(float miles) => miles >= _orbitHeightMiles - 0.05f;
+
     private void Awake()
     {
         if (Instance)
