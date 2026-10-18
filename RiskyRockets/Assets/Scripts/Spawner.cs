@@ -16,6 +16,7 @@ public class Spawner : MonoBehaviour
     private List<GameObject> _placements = new();
     private List<GameObject> _scanned = new();
     
+#if UNITY_EDITOR
     [ContextMenu("Get Score")]
     private void GetScore()
     {
@@ -66,7 +67,8 @@ public class Spawner : MonoBehaviour
             DestroyImmediate(placement);
         }
     }
-
+#endif
+    
     private int ScanTrash()
     {
         _ghostContactFilter = new ContactFilter2D()
