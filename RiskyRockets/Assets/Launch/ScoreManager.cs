@@ -21,6 +21,8 @@ public class ScoreManager : MonoBehaviour
     private void Start()
     {
         LaunchManager.Instance.LaunchEnded += ShowFinal;
+        
+        _scoreText.gameObject.SetActive(false);
     }
 
     private void OnDestroy()
@@ -30,6 +32,11 @@ public class ScoreManager : MonoBehaviour
 
     public void SetHeight(float miles)
     {
+        if (!_scoreText.gameObject.activeSelf)
+        {
+            _scoreText.gameObject.SetActive(true);
+        }
+        
         BestHeightMiles = miles;
         _scoreText.text = $"{miles:0.0} mi";
     }
@@ -39,6 +46,6 @@ public class ScoreManager : MonoBehaviour
         BestHeightMiles = bestMiles;
         // Small tolerance so hitting the target exactly still counts as orbit.
         bool reachedOrbit = bestMiles >= LaunchManager.Instance.OrbitHeightMiles - 0.05f;
-        _scoreText.text = reachedOrbit ? $"{bestMiles:0.0} mi  ORBIT!" : $"{bestMiles:0.0} mi";
+        _scoreText.text = reachedOrbit ? $"{bestMiles:0.0} mi\nROSKY HAS REACHED ORBIT!!!" : $"{bestMiles:0.0} mi\nRIP ROSKY";
     }
 }

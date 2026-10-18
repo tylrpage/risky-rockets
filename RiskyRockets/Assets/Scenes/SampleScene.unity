@@ -465,11 +465,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4923053182145593744, guid: 7413d1d6b24ae4c45802f2c0a100f15a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.51
+      value: 7.76
       objectReference: {fileID: 0}
     - target: {fileID: 4923053182145593744, guid: 7413d1d6b24ae4c45802f2c0a100f15a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.2699995
+      value: 7.01
       objectReference: {fileID: 0}
     - target: {fileID: 4923053182145593744, guid: 7413d1d6b24ae4c45802f2c0a100f15a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1342,11 +1342,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 824561472}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -182.3, y: 157.5}
-  m_SizeDelta: {x: 200, y: 50}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 28.9, y: -21.3}
+  m_SizeDelta: {x: 323.2, y: 70}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &437284030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1367,10 +1367,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: 200 mi\nROSKY HAS REACHED ORBIT!!!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 507e768fec3a66a41be9e46cd4be99a3, type: 2}
+  m_sharedMaterial: {fileID: 1204150075813718049, guid: 507e768fec3a66a41be9e46cd4be99a3, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1394,8 +1394,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2237,11 +2237,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8529568420570528696, guid: 3410271f6c6473b4f93622da1fa08391, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.08
+      value: 5.82
       objectReference: {fileID: 0}
     - target: {fileID: 8529568420570528696, guid: 3410271f6c6473b4f93622da1fa08391, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.47
+      value: 4.49
       objectReference: {fileID: 0}
     - target: {fileID: 8529568420570528696, guid: 3410271f6c6473b4f93622da1fa08391, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7216,6 +7216,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1250105926}
+  - {fileID: 1873170079}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1813014224
@@ -7633,12 +7634,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1873170077}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -25.37, y: 1.18, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -20.066668, y: 11.920001, z: -0.6666667}
+  m_LocalScale: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1813014223}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1873170080
 MonoBehaviour:
@@ -8333,11 +8334,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7054974711643922385, guid: c586aca3cd63ece438c2cf2364f3e7f0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.51
+      value: 5.53
       objectReference: {fileID: 0}
     - target: {fileID: 7054974711643922385, guid: c586aca3cd63ece438c2cf2364f3e7f0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 9.27
+      value: 9.23
       objectReference: {fileID: 0}
     - target: {fileID: 7054974711643922385, guid: c586aca3cd63ece438c2cf2364f3e7f0, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9034,4 +9035,3 @@ SceneRoots:
   - {fileID: 824561472}
   - {fileID: 1262417154}
   - {fileID: 1999000002}
-  - {fileID: 1873170079}
