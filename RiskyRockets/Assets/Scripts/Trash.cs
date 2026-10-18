@@ -5,6 +5,7 @@ public class Trash : MonoBehaviour
     [field: SerializeField] public int FuelValue { get; private set; }
 
     public bool Dropped;
+    
     public void Eject()
     {
         ScoreManager.Instance.Score += FuelValue;
