@@ -15,6 +15,7 @@ public class LaunchActor : MonoBehaviour
     private float _timeSinceActingStart;
     private Spline _spline;
     private Vector3 _initialPosition;
+    public float CompletionPercentage;
 
     private void Start()
     {
@@ -36,8 +37,15 @@ public class LaunchActor : MonoBehaviour
     void Update()
     {
         if (!_isActing) return;
-
-        Act();
+        
+        if (CompletionPercentage == 0.0f)
+        {
+            Act(1.0f);
+        }
+        else
+        {
+            Act(CompletionPercentage);
+        }
     }
 
     private void BeginActing()
@@ -47,7 +55,7 @@ public class LaunchActor : MonoBehaviour
         _initialPosition = transform.position;
     }
     
-    private void Act()
+    private void Act(float completionPercentage)
     {
         _timeSinceActingStart += Time.deltaTime;
 
@@ -55,12 +63,13 @@ public class LaunchActor : MonoBehaviour
 
         float t = _timeSinceActingStart - _startTime;
         float p = t / _duration;
+        p = AnimationCurves.CalculateParametric(p) * completionPercentage;
         
         Vector3 splinePosition = _spline.EvaluatePosition(p);
         Vector3 newPosition = _initialPosition + new Vector3(splinePosition.x, splinePosition.y, 0);
         transform.position = newPosition;
 
-        if (p >= 1)
+        if (p >= completionPercentage)
         {
             _isActing = false;
         }
