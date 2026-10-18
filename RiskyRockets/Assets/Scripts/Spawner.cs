@@ -80,7 +80,7 @@ public class Spawner : MonoBehaviour
         int totalFuel = 0;
         for (int i = 0; i < hits; i++)
         {
-            RaycastHit2D hit = _rigidbodyCastHitsBuffer[0];
+            RaycastHit2D hit = _rigidbodyCastHitsBuffer[i];
 
             // Only scan trash
             if (!hit.collider.gameObject.activeInHierarchy || !hit.collider.TryGetComponent(out Trash trash))
