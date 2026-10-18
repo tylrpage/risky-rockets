@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6513568480439386948}
   - component: {fileID: 1061834598596690646}
   - component: {fileID: 8595989952934094239}
-  - component: {fileID: 6102029519744422443}
+  - component: {fileID: 6553028333251381565}
   - component: {fileID: 4126351987169517997}
   m_Layer: 0
   m_Name: Boot
@@ -121,7 +121,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!60 &6102029519744422443
+--- !u!60 &6553028333251381565
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -197,5 +197,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fabbc6a8e86733f4d8ca5cc12e2212a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Trash
-  FuelValue: 3
+  <FuelValue>k__BackingField: 4
   Dropped: 0
