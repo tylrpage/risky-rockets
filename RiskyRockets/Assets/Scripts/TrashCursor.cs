@@ -17,6 +17,7 @@ public class TrashCursor : MonoBehaviour
     [SerializeField] private Sprite _grabberGood;
     [SerializeField] private Sprite _grabberBad;
     [SerializeField] private TrashDragging _trashDragging;
+    [SerializeField] private InstructionsController _instructionsController;
     private CursorType? _currentCursorType;
 
     private void Start()
@@ -56,8 +57,12 @@ public class TrashCursor : MonoBehaviour
         // Position
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         transform.transform.position = new Vector3(mouseWorldPos.x, mouseWorldPos.y, -1);
-        
-        if (_trashDragging.IsDraggingTrash())
+
+        if (_instructionsController.IsOpen || _instructionsController.IsMouseOver)
+        {
+            SetCursor(_instructionsController.IsMoving ? CursorType.Pointer : CursorType.Grabber);
+        }
+        else if (_trashDragging.IsDraggingTrash())
         {
             SetCursor(_trashDragging.IsOverDropArea() ? CursorType.GrabberGood : CursorType.GrabberBad);
         }
