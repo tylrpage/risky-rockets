@@ -33,7 +33,10 @@ public class LaunchActor : MonoBehaviour
 
     private void OnDestroy()
     {
-        _launchManager.LaunchStarted -= BeginTimer;
+        if (_launchManager != null)
+        {
+            _launchManager.LaunchStarted -= BeginTimer;
+        }
     }
 
     // Update is called once per frame

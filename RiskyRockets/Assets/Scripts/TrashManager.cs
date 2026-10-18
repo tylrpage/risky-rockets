@@ -1,32 +1,34 @@
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using System.Collections;
-using Unity.VisualScripting;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class TrashManager : MonoBehaviour
 {
     public static TrashManager Instance;
     public List<Trash> TrashInShip;
-    private const float TRASH_BURN_DELAY = 1f;
-    private const int SPECIAL_TRASH_THRESHHOLD = 10;
     [SerializeField] private Rocket _rocket;
     public event Action ShipEmptied;
-    
+
     private void Awake()
     {
         if (Instance)
         {
             Destroy(this.gameObject);
+            return;
         }
-        Instance = this.gameObject.GetComponent<TrashManager>();
+        Instance = this;
+        TrashInShip = new List<Trash>();
     }
 
     private void Start()
     {
-        LaunchManager.Instance.LaunchStarted += BeginEjection;
-        TrashInShip = new List<Trash>();
+        LaunchManager.Instance.LaunchStarted += BeginBurn;
+    }
+
+    private void OnDestroy()
+    {
+        if (LaunchManager.Instance != null) LaunchManager.Instance.LaunchStarted -= BeginBurn;
     }
 
     public void AddTrashToShip(Trash trash)
@@ -34,28 +36,71 @@ public class TrashManager : MonoBehaviour
         TrashInShip.Add(trash);
     }
 
-    private void BeginEjection()
+    public void PrepareCargo(float gravityScale)
     {
-        StartCoroutine(EjectTrash());
+        TrashInShip.RemoveAll(trash => trash == null);
+
+        int totalFuel = 0;
+        foreach (Trash trash in TrashInShip)
+        {
+            totalFuel += trash.FuelValue;
+            trash.PrepareForLaunch(gravityScale);
+        }
+        Debug.Log($"Launching with {totalFuel} fuel (target {LaunchManager.Instance.TargetFuel})");
     }
 
-    private IEnumerator EjectTrash()
+    public List<Transform> FreezeWorldTrash()
     {
-        yield return new WaitForSeconds(5f);
-        while (TrashInShip.Count > 0)
+        HashSet<Trash> cargo = new(TrashInShip);
+        List<Transform> frozen = new();
+        foreach (Trash trash in FindObjectsByType<Trash>(FindObjectsSortMode.None))
         {
-            Trash trash = TrashInShip[0];
-            trash.Eject();
-            if (trash.FuelValue >= SPECIAL_TRASH_THRESHHOLD)
-            {
-                StartCoroutine(_rocket.Boost());
-                yield return new WaitForSeconds(Rocket.BOOST_DURATION + TRASH_BURN_DELAY);
-            }
-            else
-            {
-                yield return new WaitForSeconds(TRASH_BURN_DELAY);
-            }
-            TrashInShip.RemoveAt(0);
+            if (cargo.Contains(trash)) continue;
+            trash.Freeze();
+            frozen.Add(trash.transform);
+        }
+        return frozen;
+    }
+
+    private Trash TakeLowestTrash()
+    {
+        TrashInShip.RemoveAll(trash => trash == null);
+        if (TrashInShip.Count == 0) return null;
+
+        int lowest = 0;
+        for (int i = 1; i < TrashInShip.Count; i++)
+        {
+            if (BottomY(TrashInShip[i]) < BottomY(TrashInShip[lowest])) lowest = i;
+        }
+        Trash result = TrashInShip[lowest];
+        TrashInShip.RemoveAt(lowest);
+        return result;
+    }
+
+    private static float BottomY(Trash trash)
+    {
+        Collider2D col = trash.GetComponent<Collider2D>();
+        return col != null ? col.bounds.min.y : trash.transform.position.y;
+    }
+
+    private void BeginBurn()
+    {
+        StartCoroutine(BurnTrash());
+    }
+
+    private IEnumerator BurnTrash()
+    {
+        LaunchManager launch = LaunchManager.Instance;
+        yield return new WaitForSeconds(launch.IgnitionDelay);
+
+        float burnTime = launch.BurnTimePerItem;
+        // Pick the lowest piece each time, since the stack shifts as it settles.
+        Trash trash;
+        while ((trash = TakeLowestTrash()) != null)
+        {
+            _rocket.AddBurn(trash.FuelValue * launch.DeltaVPerFuel, burnTime);
+            trash.Burn(burnTime);
+            yield return new WaitForSeconds(burnTime);
         }
         _rocket.StopShake();
         ShipEmptied?.Invoke();

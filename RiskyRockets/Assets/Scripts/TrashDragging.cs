@@ -61,6 +61,13 @@ public class TrashDragging : MonoBehaviour
     
     private void Update()
     {
+        if (LaunchManager.Instance != null && LaunchManager.Instance.HasLaunched)
+        {
+            if (_grabbedTrash != null) RestoreTrash();
+            IsHoveringDraggableTrash = false;
+            return;
+        }
+
         Trash hoveredTrash = GetHoveredTrash();
         IsHoveringDraggableTrash = hoveredTrash != null && !hoveredTrash.Dropped;
 

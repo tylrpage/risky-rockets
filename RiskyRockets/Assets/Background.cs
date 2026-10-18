@@ -1,61 +1,51 @@
-using System.Collections;
 using UnityEngine;
 
+// Stops once the top of the highest Background tile reaches the top of the view, so it never runs out.
+// Runs after Rocket so it uses this frame's camera position.
+[DefaultExecutionOrder(100)]
 public class Background : MonoBehaviour
 {
-    private float _speed;
-    public float MaxSpeed;
-    private Coroutine _accelerateCoroutine;
+    [SerializeField] private Rocket _rocket;
+
+    private Camera _camera;
+    private Vector3 _startPosition;
+    private float _highestTileTop;
+    private bool _isScrolling;
 
     private void Start()
     {
-        LaunchManager.Instance.LaunchStarted += StartPan;
-        TrashManager.Instance.ShipEmptied += EndPan;
+        if (_rocket == null) _rocket = FindAnyObjectByType<Rocket>();
+        LaunchManager.Instance.LaunchStarted += OnLaunchStarted;
     }
 
-    private void StartPan()
+    private void OnDestroy()
     {
-        _accelerateCoroutine = StartCoroutine(Accelerate());
-        StartCoroutine(UpdatePositionCoroutine());
+        if (LaunchManager.Instance != null) LaunchManager.Instance.LaunchStarted -= OnLaunchStarted;
     }
 
-    private void EndPan()
+    private void OnLaunchStarted()
     {
-        StartCoroutine(Decelerate());
-    }
+        _camera = Camera.main;
+        _startPosition = transform.position;
 
-    private void UpdatePosition()
-    {
-        transform.position = new Vector3(transform.position.x, transform.position.y - _speed, transform.position.z);
-    }
-
-    private IEnumerator Accelerate()
-    {
-        while (_speed < MaxSpeed)
+        // All tiles stop at the same scroll amount, so they stay stacked.
+        _highestTileTop = float.MinValue;
+        foreach (Background tile in FindObjectsByType<Background>(FindObjectsSortMode.None))
         {
-            yield return new WaitForSeconds(0.02f);
-            _speed += 0.03f;
-            UpdatePosition();
+            _highestTileTop = Mathf.Max(_highestTileTop, tile.GetComponent<SpriteRenderer>().bounds.max.y);
         }
+        _isScrolling = true;
     }
 
-    private IEnumerator Decelerate()
+    private void LateUpdate()
     {
-        StopCoroutine(_accelerateCoroutine);
-         while (_speed > 0)
-        {
-            yield return new WaitForSeconds(0.02f);
-            _speed -= 0.03f;
-        }
-        _speed = 0;
-    }
-    
-    private IEnumerator UpdatePositionCoroutine()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(0.02f);
-            UpdatePosition();
-        }
+        if (!_isScrolling || _rocket == null) return;
+
+        float scroll = _rocket.AltitudeMiles * LaunchManager.Instance.WorldUnitsPerMile;
+        float viewTop = _camera.transform.position.y + _camera.orthographicSize;
+        float maxScroll = Mathf.Max(0f, _highestTileTop - viewTop);
+        scroll = Mathf.Min(scroll, maxScroll);
+
+        transform.position = _startPosition + Vector3.down * scroll;
     }
 }
