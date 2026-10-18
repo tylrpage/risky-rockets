@@ -6,6 +6,11 @@ using UnityEngine;
 public class LaunchManager : MonoBehaviour
 {
     public static LaunchManager Instance;
+
+    // Clears the singleton when play mode starts, since domain reload is off in the editor.
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics() => Instance = null;
+
     public event Action LaunchStarted;
     public event Action<float> LaunchEnded;
 

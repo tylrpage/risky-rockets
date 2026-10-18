@@ -6,6 +6,10 @@ public class SoundEffectManager : MonoBehaviour
 {
     public static SoundEffectManager Instance;
 
+    // Clears the singleton when play mode starts, since domain reload is off in the editor.
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics() => Instance = null;
+
     [SerializeField] private AudioSource _rocketSound;
     [SerializeField] private AudioSource _hitSFXSource;
     [SerializeField] private float _rocketRampUpDuration = 1f;

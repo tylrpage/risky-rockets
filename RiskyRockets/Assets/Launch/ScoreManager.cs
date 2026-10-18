@@ -4,6 +4,11 @@ using TMPro;
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
+
+    // Clears the singleton when play mode starts, since domain reload is off in the editor.
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics() => Instance = null;
+
     [SerializeField] private TMP_Text _scoreText;
 
     public float BestHeightMiles { get; private set; }
