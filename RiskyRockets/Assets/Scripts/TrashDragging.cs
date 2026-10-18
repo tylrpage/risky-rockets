@@ -119,7 +119,7 @@ public class TrashDragging : MonoBehaviour
                     _grabbedTrash.GetComponent<SpriteRenderer>().color = trashColor;
                     
                     // Register Trash to TrashManager
-                    TrashManager.Instance.AddTrashToShip(_grabbedTrash);
+                    TrashManager.Instance?.AddTrashToShip(_grabbedTrash);
                 
                     // Delete the copy
                     Destroy(_grabbedTrashCopy.gameObject);
