@@ -197,5 +197,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fabbc6a8e86733f4d8ca5cc12e2212a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Trash
-  <FuelValue>k__BackingField: 5
+  <FuelValue>k__BackingField: 6
   Dropped: 0
